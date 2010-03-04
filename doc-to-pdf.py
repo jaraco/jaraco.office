@@ -10,20 +10,27 @@ from win32com.client import Dispatch, constants
 
 log = logging.getLogger(__name__)
 
-def doc2pdf(docfile, pdffile = None):
-	word = Dispatch('Word.Application')
-	if pdffile is None:
-		base, ext = os.path.splitext(docfile)
-		pdffile = base + '.pdf'
-	if os.path.exists(pdffile):
-		raise Exception("Target already exists: " + pdffile)
-	log.info('converting {docfile} to {pdffile}'.format(**vars()))
-	doc = word.Documents.Open(docfile)
-	wdFormatPDF = getattr(constants, 'wdFormatPDF', 17)
-	doc.SaveAs(pdffile, wdFormatPDF)
-	wdDoNotSaveChanges = getattr(constants, 'wdDoNotSaveChanges', 0)
-	doc.Close(wdDoNotSaveChanges)
-	word.Quit()
+class Converter(object):
+	def __init__(self):
+		self.word = Dispatch('Word.Application')
+
+	def convert(self, docfile, pdffile = None):
+		if pdffile is None:
+			base, ext = os.path.splitext(docfile)
+			pdffile = base + '.pdf'
+		if os.path.exists(pdffile):
+			raise Exception("Target already exists: " + pdffile)
+		log.info('converting {docfile} to {pdffile}'.format(**vars()))
+		doc = self.word.Documents.Open(docfile)
+		wdFormatPDF = getattr(constants, 'wdFormatPDF', 17)
+		doc.SaveAs(pdffile, wdFormatPDF)
+		wdDoNotSaveChanges = getattr(constants, 'wdDoNotSaveChanges', 0)
+		doc.Close(wdDoNotSaveChanges)
+
+	__call__ = convert
+
+	def __del__(self):
+		self.word.Quit()
 
 def handle_multiple(docfile, pdffile=None):
 	"""
@@ -35,7 +42,8 @@ def handle_multiple(docfile, pdffile=None):
 		if pdffile is not None:
 			raise Exception("Cannot specify output file with multiple sources")
 	log.info("Processing {n_files} source files...".format(**vars()))
-	map(doc2pdf, files)
+	converter = Converter()
+	map(converter, files)
 
 def handle_command_line():
 	"%prog <word doc> [<pdf file>]"
