@@ -1,6 +1,7 @@
 #!python
 
 import re
+import os
 import inspect
 import logging
 from glob import glob
@@ -12,7 +13,11 @@ log = logging.getLogger(__name__)
 def doc2pdf(docfile, pdffile = None):
 	word = Dispatch('Word.Application')
 	if pdffile is None:
-		pdffile = re.sub('\.doc(x)?$', '.pdf', docfile)
+		base, ext = os.path.splitext(docfile)
+		pdffile = base + '.pdf'
+	if os.path.exists(pdffile):
+		raise Exception("Target already exists: " + pdffile)
+	log.info('converting {docfile} to {pdffile}'.format(**vars()))
 	doc = word.Documents.Open(docfile)
 	wdFormatPDF = getattr(constants, 'wdFormatPDF', 17)
 	doc.SaveAs(pdffile, wdFormatPDF)
