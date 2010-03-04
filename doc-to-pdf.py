@@ -2,8 +2,12 @@
 
 import re
 import inspect
+import logging
+from glob import glob
 from optparse import OptionParser
 from win32com.client import Dispatch, constants
+
+log = logging.getLogger(__name__)
 
 def doc2pdf(docfile, pdffile = None):
 	word = Dispatch('Word.Application')
@@ -16,6 +20,18 @@ def doc2pdf(docfile, pdffile = None):
 	doc.Close(wdDoNotSaveChanges)
 	word.Quit()
 
+def handle_multiple(docfile, pdffile=None):
+	"""
+	Handle docfile if it matches more than one file.
+	"""
+	files = glob(docfile)
+	n_files = len(files)
+	if n_files > 1:
+		if pdffile is not None:
+			raise Exception("Cannot specify output file with multiple sources")
+	log.info("Processing {n_files} source files...".format(**vars()))
+	map(doc2pdf, files)
+
 def handle_command_line():
 	"%prog <word doc> [<pdf file>]"
 	usage = inspect.getdoc(handle_command_line)
@@ -23,6 +39,7 @@ def handle_command_line():
 	options, args = parser.parse_args()
 	if not 1 <= len(args) <= 2:
 		parser.error("Incorrect number of arguments")
-	doc2pdf(*args)
+	logging.basicConfig(level=logging.INFO)
+	handle_multiple(*args)
 
 if __name__ == '__main__': handle_command_line()
