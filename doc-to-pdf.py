@@ -2,50 +2,15 @@
 
 import re
 import os
-import tempfile
 import inspect
 import logging
 import itertools
 from glob import glob
 from optparse import OptionParser
-from win32com.client import Dispatch, constants
+
+from jaraco.windows.office import Converter
 
 log = logging.getLogger(__name__)
-
-class save_to_file():
-	def __init__(self, content):
-		self.content = content
-
-	def __enter__(self):
-		fd, self.filename = tempfile.mkstemp()
-		file = os.fdopen(fd, 'wb')
-		file.write(self.content)
-		file.close()
-		return self.filename
-
-	def __exit__(self, type, value, traceback):
-		os.remove(self.filename)
-
-class Converter(object):
-	def __init__(self):
-		self.word = Dispatch('Word.Application')
-
-	def convert(self, docfile_string):
-		with save_to_file(docfile_string) as docfile:
-			doc = self.word.Documents.Open(docfile)
-			wdFormatPDF = getattr(constants, 'wdFormatPDF', 17)
-			pdffile = docfile+'.pdf' # if I don't put a pdf extension on it, Word will
-			res = doc.SaveAs(pdffile, wdFormatPDF)
-			wdDoNotSaveChanges = getattr(constants, 'wdDoNotSaveChanges', 0)
-			doc.Close(wdDoNotSaveChanges)
-			content = open(pdffile, 'rb').read()
-			os.remove(pdffile)
-		return content
-
-	__call__ = convert
-
-	def __del__(self):
-		self.word.Quit()
 
 class ExtensionReplacer():
 	"""
