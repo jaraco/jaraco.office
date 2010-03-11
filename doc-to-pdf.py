@@ -5,6 +5,7 @@ import os
 import tempfile
 import inspect
 import logging
+import itertools
 from glob import glob
 from optparse import OptionParser
 from win32com.client import Dispatch, constants
@@ -71,9 +72,9 @@ def handle_multiple(docfile, pdffile=None):
 			raise Exception("Cannot specify output file with multiple sources")
 	log.info("Processing {n_files} source files...".format(**vars()))
 	converter = Converter()
-	doc_content = map(lambda f: open(f, 'rb').read(), doc_files)
-	pdf_content = map(converter, doc_content)
-	pdf_files = map(ExtensionReplacer('.pdf'), doc_files) if not pdffile else [pdffile]
+	doc_content = itertools.imap(lambda f: open(f, 'rb').read(), doc_files)
+	pdf_content = itertools.imap(converter, doc_content)
+	pdf_files = itertools.imap(ExtensionReplacer('.pdf'), doc_files) if not pdffile else [pdffile]
 	map(save_to, pdf_content, pdf_files)
 
 def handle_command_line():
