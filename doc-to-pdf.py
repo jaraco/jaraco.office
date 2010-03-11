@@ -2,6 +2,7 @@
 
 import re
 import os
+import tempfile
 import inspect
 import logging
 from glob import glob
@@ -10,40 +11,70 @@ from win32com.client import Dispatch, constants
 
 log = logging.getLogger(__name__)
 
+class save_to_file():
+	def __init__(self, content):
+		self.content = content
+
+	def __enter__(self):
+		fd, self.filename = tempfile.mkstemp()
+		file = os.fdopen(fd, 'wb')
+		file.write(self.content)
+		file.close()
+		return self.filename
+
+	def __exit__(self, type, value, traceback):
+		os.remove(self.filename)
+
 class Converter(object):
 	def __init__(self):
 		self.word = Dispatch('Word.Application')
 
-	def convert(self, docfile, pdffile = None):
-		if pdffile is None:
-			base, ext = os.path.splitext(docfile)
-			pdffile = base + '.pdf'
-		if os.path.exists(pdffile):
-			raise Exception("Target already exists: " + pdffile)
-		log.info('converting {docfile} to {pdffile}'.format(**vars()))
-		doc = self.word.Documents.Open(docfile)
-		wdFormatPDF = getattr(constants, 'wdFormatPDF', 17)
-		doc.SaveAs(pdffile, wdFormatPDF)
-		wdDoNotSaveChanges = getattr(constants, 'wdDoNotSaveChanges', 0)
-		doc.Close(wdDoNotSaveChanges)
+	def convert(self, docfile_string):
+		with save_to_file(docfile_string) as docfile:
+			doc = self.word.Documents.Open(docfile)
+			wdFormatPDF = getattr(constants, 'wdFormatPDF', 17)
+			pdffile = docfile+'.pdf' # if I don't put a pdf extension on it, Word will
+			res = doc.SaveAs(pdffile, wdFormatPDF)
+			wdDoNotSaveChanges = getattr(constants, 'wdDoNotSaveChanges', 0)
+			doc.Close(wdDoNotSaveChanges)
+			content = open(pdffile, 'rb').read()
+			os.remove(pdffile)
+		return content
 
 	__call__ = convert
 
 	def __del__(self):
 		self.word.Quit()
 
+class ExtensionReplacer():
+	"""
+	>>> ExtensionReplacer('.pdf')('myfile.doc')
+	'myfile.pdf'
+	"""
+	def __init__(self, new_ext):
+		self.new_ext = new_ext
+
+	def __call__(self, orig_name):
+		return os.path.splitext(orig_name)[0] + self.new_ext
+
+def save_to(content, filename):
+	open(filename, 'wb').write(content)
+
 def handle_multiple(docfile, pdffile=None):
 	"""
 	Handle docfile if it matches more than one file.
 	"""
-	files = glob(docfile)
-	n_files = len(files)
+	doc_files = glob(docfile)
+	n_files = len(doc_files)
 	if n_files > 1:
 		if pdffile is not None:
 			raise Exception("Cannot specify output file with multiple sources")
 	log.info("Processing {n_files} source files...".format(**vars()))
 	converter = Converter()
-	map(converter, files)
+	doc_content = map(lambda f: open(f, 'rb').read(), doc_files)
+	pdf_content = map(converter, doc_content)
+	pdf_files = map(ExtensionReplacer('.pdf'), doc_files) if not pdffile else [pdffile]
+	map(save_to, pdf_content, pdf_files)
 
 def handle_command_line():
 	"%prog <word doc> [<pdf file>]"
