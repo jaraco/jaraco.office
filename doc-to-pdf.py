@@ -1,7 +1,5 @@
 #!python
 
-import re
-import os
 import inspect
 import logging
 import itertools
@@ -9,19 +7,9 @@ from glob import glob
 from optparse import OptionParser
 
 from jaraco.windows.office import Converter
+from jaraco.util.filesystem import ExtensionReplacer
 
 log = logging.getLogger(__name__)
-
-class ExtensionReplacer():
-	"""
-	>>> ExtensionReplacer('.pdf')('myfile.doc')
-	'myfile.pdf'
-	"""
-	def __init__(self, new_ext):
-		self.new_ext = new_ext
-
-	def __call__(self, orig_name):
-		return os.path.splitext(orig_name)[0] + self.new_ext
 
 def save_to(content, filename):
 	open(filename, 'wb').write(content)
