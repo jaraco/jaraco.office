@@ -3,7 +3,7 @@ from itertools import takewhile
 import re
 
 app = Dispatch('Excel.Application')
-#wb = app.Workbooks.Open(r'\\merciless\users\jaraco\documents\innovative management concepts\excelgrep\sample.xlsx')
+#wb = app.Workbooks.Open(filename)
 
 default_pattern = 'Total'
 
@@ -25,7 +25,10 @@ def IsBlank(row):
 	return not IsNotBlank(row)
 
 def DeleteUnmatchedRows():
-	"delete rows that don't match the pattern; you'll have to run this multiple times if you want to get consecutive matches"
+	"""
+	Delete rows that don't match the pattern; you'll have to run this
+	multiple times if you want to get consecutive matches
+	"""
 	# excel doesn't support iteration
 	#valueRows = takewhile(IsNotBlank, app.Rows)
 	#map(DeleteRow, filter(NotHasPattern, valueRows))
@@ -42,4 +45,3 @@ def GetPopulatedRows():
 def FixBlankWPNCD(row):
 	if row.Cells(1,1).Value is None:
 		app.Cells(row.Row, row.Column).Value = app.Cells(row.Row-1, row.Column).Value
-		
