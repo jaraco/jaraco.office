@@ -36,7 +36,7 @@ def doc_to_pdf_cmd():
 	
 	Convert a word document to a PDF using Office 2007
 	"""
-	usage = inspect.getdoc(handle_command_line)
+	usage = inspect.getdoc(doc_to_pdf_cmd)
 	parser = OptionParser(usage=usage)
 	options, args = parser.parse_args()
 	if not 1 <= len(args) <= 2:
