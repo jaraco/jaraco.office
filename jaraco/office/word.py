@@ -30,8 +30,12 @@ def handle_multiple(docfile, pdffile=None):
 	pdf_files = itertools.imap(ExtensionReplacer('.pdf'), doc_files) if not pdffile else [pdffile]
 	map(save_to, pdf_content, pdf_files)
 
-def handle_command_line():
-	"%prog <word doc> [<pdf file>]"
+def doc_to_pdf_cmd():
+	"""
+	%prog <word doc> [<pdf file>]
+	
+	Convert a word document to a PDF using Office 2007
+	"""
 	usage = inspect.getdoc(handle_command_line)
 	parser = OptionParser(usage=usage)
 	options, args = parser.parse_args()
@@ -39,5 +43,3 @@ def handle_command_line():
 		parser.error("Incorrect number of arguments")
 	logging.basicConfig(level=logging.INFO)
 	handle_multiple(*args)
-
-if __name__ == '__main__': handle_command_line()

@@ -20,4 +20,9 @@ setup(
 		"Programming Language :: Python",
 	],
 	zip_safe=True,
+	entry_points = dict(
+		console_scripts = [
+			'doc-to-pdf = jaraco.office.word:doc_to_pdf_cmd',
+		],
+	)
 	)
