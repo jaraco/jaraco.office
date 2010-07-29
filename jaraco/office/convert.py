@@ -1,10 +1,13 @@
 import os
 import optparse
-from win32com.client import Dispatch, constants
-import pythoncom
-import threading
-
+from contextlib import contextmanager
 from jaraco.util.filesystem import save_to_file, replace_extension
+
+@contextmanager
+def word_context(word, filename, close_flags):
+	doc = word.Documents.Open(filename)
+	yield doc
+	doc.Close(close_flags)
 
 class Converter(object):
 	"""
@@ -13,25 +16,28 @@ class Converter(object):
 	
 	Requires Microsoft Word 2007 or later.
 	"""
-	target_format = getattr(constants, 'wdFormatPDF', 17)
-
 	def __init__(self):
+		from win32com.client import Dispatch
+		import pythoncom
+		import threading
 		if threading.current_thread().getName() != 'MainThread':
 			pythoncom.CoInitialize()
 		self.word = Dispatch('Word.Application')
 
-	def convert(self, docfile_string):
+	def convert(self, docfile_string, target_format=None):
 		"""
 		Take a string (in memory) and return it as a string of the
 		target format (also as a string in memory).
 		"""
+		from win32com.client import constants
+		target_format = target_format or getattr(constants, 'wdFormatPDF', 17)
+
 		with save_to_file(docfile_string) as docfile:
-			doc = self.word.Documents.Open(docfile)
 			# if I don't put a pdf extension on it, Word will
 			pdffile = replace_extension('.pdf', docfile)
-			res = doc.SaveAs(pdffile, self.target_format)
-			wdDoNotSaveChanges = getattr(constants, 'wdDoNotSaveChanges', 0)
-			doc.Close(wdDoNotSaveChanges)
+			dont_save = getattr(constants, 'wdDoNotSaveChanges', 0)
+			with word_context(self.word, docfile, dont_save) as doc:
+				res = doc.SaveAs(pdffile, target_format)
 			content = open(pdffile, 'rb').read()
 			os.remove(pdffile)
 		return content
