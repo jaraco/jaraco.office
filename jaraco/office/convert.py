@@ -39,7 +39,6 @@ class Converter(object):
 			pdffile = replace_extension('.pdf', docfile)
 			dont_save = getattr(constants, 'wdDoNotSaveChanges', 0)
 			with word_context(self.word, docfile, dont_save) as doc:
-				raise Exception
 				res = doc.SaveAs(pdffile, target_format)
 			with open(pdffile, 'rb') as pdf:
 				content = pdf.read()
