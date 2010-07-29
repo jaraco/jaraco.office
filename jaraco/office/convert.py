@@ -1,5 +1,7 @@
 import os
 from win32com.client import Dispatch, constants
+import pythoncom
+import threading
 
 from jaraco.util.filesystem import save_to_file, replace_extension
 
@@ -13,6 +15,8 @@ class Converter(object):
 	target_format = getattr(constants, 'wdFormatPDF', 17)
 
 	def __init__(self):
+		if threading.current_thread().getName() != 'MainThread':
+			pythoncom.CoInitialize()
 		self.word = Dispatch('Word.Application')
 
 	def convert(self, docfile_string):
@@ -35,3 +39,15 @@ class Converter(object):
 
 	def __del__(self):
 		self.word.Quit()
+
+class ConvertServer(object):
+	def default(self, filename):
+		cherrypy.response.headers['Content-Type'] = 'application/pdf'
+		return Converter().convert(cherrypy.request.body.fp.read())
+	default.exposed = True
+
+	@staticmethod
+	def start_server():
+		global cherrypy
+		import cherrypy
+		cherrypy.quickstart(ConvertServer())

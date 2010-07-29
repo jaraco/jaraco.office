@@ -23,6 +23,7 @@ setup(
 	entry_points = dict(
 		console_scripts = [
 			'doc-to-pdf = jaraco.office.word:doc_to_pdf_cmd',
+			'doc-to-pdf-server = jaraco.office.convert:ConvertServer.start_server',
 		],
 	)
 	)
