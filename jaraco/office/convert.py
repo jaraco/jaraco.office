@@ -1,4 +1,5 @@
 import os
+import optparse
 from win32com.client import Dispatch, constants
 import pythoncom
 import threading
@@ -50,4 +51,6 @@ class ConvertServer(object):
 	def start_server():
 		global cherrypy
 		import cherrypy
-		cherrypy.quickstart(ConvertServer())
+		_, args = optparse.OptionParser().parse_args()
+		if args: config, = args
+		cherrypy.quickstart(ConvertServer(), config=config)
