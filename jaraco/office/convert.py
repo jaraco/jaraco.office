@@ -6,8 +6,10 @@ from jaraco.util.filesystem import save_to_file, replace_extension
 @contextmanager
 def word_context(word, filename, close_flags):
 	doc = word.Documents.Open(filename)
-	yield doc
-	doc.Close(close_flags)
+	try:
+		yield doc
+	finally:
+		doc.Close(close_flags)
 
 class Converter(object):
 	"""
@@ -37,8 +39,10 @@ class Converter(object):
 			pdffile = replace_extension('.pdf', docfile)
 			dont_save = getattr(constants, 'wdDoNotSaveChanges', 0)
 			with word_context(self.word, docfile, dont_save) as doc:
+				raise Exception
 				res = doc.SaveAs(pdffile, target_format)
-			content = open(pdffile, 'rb').read()
+			with open(pdffile, 'rb') as pdf:
+				content = pdf.read()
 			os.remove(pdffile)
 		return content
 
