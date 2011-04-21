@@ -50,16 +50,38 @@ class Converter(object):
 	def __del__(self):
 		self.word.Quit()
 
+form = """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:py="http://genshi.edgewall.org/"
+	xmlns:xi="http://www.w3.org/2001/XInclude">
+<head>
+</head>
+<body>
+	<div>
+		<form method="post" action="convert" enctype="multipart/form-data">
+			<input type="file" name="document"/>
+			<input type="submit" />
+		</form>
+	</div>
+</body>
+</html>"""
+
 class ConvertServer(object):
-	def default(self, filename):
+	def index(self):
+		return form
+	index.exposed = True
+ 
+	def convert(self, document):
 		cherrypy.response.headers['Content-Type'] = 'application/pdf'
-		return Converter().convert(cherrypy.request.body.fp.read())
-	default.exposed = True
+		return Converter().convert(document.file.read())
+	convert.exposed = True
 
 	@staticmethod
 	def start_server():
 		global cherrypy
 		import cherrypy
 		_, args = optparse.OptionParser().parse_args()
+		config = None
 		if args: config, = args
 		cherrypy.quickstart(ConvertServer(), config=config)
