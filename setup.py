@@ -1,11 +1,8 @@
-from setuptools import setup, find_packages
-import sys, os
+from setuptools import find_packages
 
-version = '1.0'
-
-setup(
+setup_params = dict(
 	name='jaraco.office',
-	version=version,
+	use_hg_version=True,
 	description="Utility library for working with MS Office documents",
 	keywords='excel office word'.split(),
 	author='Jason R. Coombs',
@@ -25,5 +22,12 @@ setup(
 			'doc-to-pdf = jaraco.office.word:doc_to_pdf_cmd',
 			'doc-to-pdf-server = jaraco.office.convert:ConvertServer.start_server',
 		],
-	)
-	)
+	),
+	setup_requires = [
+		'hgtools',
+	],
+)
+
+if __name__ == '__main__':
+	from setuptools import setup
+	setup(**setup_params)
