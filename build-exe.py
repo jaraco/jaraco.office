@@ -9,6 +9,7 @@ setup_params = dict(
 			packages = ['pkg_resources'] + mime_names,
 		),
 	),
+	script_args=('py2exe',),
 )
 
 if __name__ == '__main__':
