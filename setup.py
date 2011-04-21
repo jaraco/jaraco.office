@@ -4,6 +4,7 @@ setup_params = dict(
 	name='jaraco.office',
 	use_hg_version=True,
 	description="Utility library for working with MS Office documents",
+	long_description=open('README').read(),
 	keywords='excel office word'.split(),
 	author='Jason R. Coombs',
 	author_email='jaraco@jaraco.com',
