@@ -24,6 +24,9 @@ setup_params = dict(
 			'doc-to-pdf-server = jaraco.office.convert:ConvertServer.start_server',
 		],
 	),
+	install_requires = [
+		'jaraco.util>=3.8.1',
+	],
 	setup_requires = [
 		'hgtools',
 	],
