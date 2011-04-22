@@ -13,9 +13,12 @@ setup_params = dict(
 	packages=find_packages(),
 	namespace_packages = ['jaraco'],
 	classifiers = [
-		"Development Status :: 4 - Beta",
+		"Development Status :: 5 - Production/Stable",
 		"Intended Audience :: Developers",
-		"Programming Language :: Python",
+		"License :: OSI Approved :: MIT License",
+		"Operating System :: Microsoft :: Windows",
+		"Programming Language :: Python :: 2",
+		"Programming Language :: Python :: 3",
 	],
 	zip_safe=True,
 	entry_points = dict(
@@ -30,6 +33,7 @@ setup_params = dict(
 	setup_requires = [
 		'hgtools',
 	],
+	use_2to3=True,
 )
 
 if __name__ == '__main__':
