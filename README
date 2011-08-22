@@ -1,5 +1,3 @@
-.. -*- restructuredtext -*-
-
 jaraco.office
 =============
 
@@ -24,6 +22,11 @@ You can install it with ``easy_install jaraco.office``, or from the
 
 Changes
 -------
+
+1.1
+~~~
+
+* Added jaraco.office.excel.get_workbook_as_xml (from jaraco.util.excel module).
 
 1.0
 ~~~
