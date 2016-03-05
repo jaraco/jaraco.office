@@ -1,2 +1,21 @@
-skeleton
-========
+jaraco.office
+=============
+
+.. contents::
+
+Status and License
+------------------
+
+``jaraco.office`` provides facilities for working with Microsoft Offic
+applications (Word, Excel, etc) using the Win32 APIs. For cross-platform
+libraries that work directly with Office 2007 OpenOffice formats, see
+`ParadocX <http://bitbucket.org/yougov/paradocx>`_ and related packages.
+
+``jaraco.office`` is written by Jason R. Coombs.  It is licensed under an
+`MIT-style permissive license
+<http://www.opensource.org/licenses/mit-license.php>`_.
+
+You can install it with ``easy_install jaraco.office``, or from the
+`mercurial repository
+<http://bitbucket.org/jaraco/jaraco.office/get/tip.zip#egg=jaraco.office-dev>`_ with
+``easy_install jaraco.office==dev``.
