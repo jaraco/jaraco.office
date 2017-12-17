@@ -3,6 +3,7 @@ import optparse
 from contextlib import contextmanager
 from jaraco.util.filesystem import save_to_file, replace_extension
 
+
 @contextmanager
 def word_context(word, filename, close_flags):
 	doc = word.Documents.Open(filename)
@@ -11,13 +12,15 @@ def word_context(word, filename, close_flags):
 	finally:
 		doc.Close(close_flags)
 
+
 class Converter(object):
 	"""
 	An object that will convert a Word-readable file to one of the Word-
 	savable formats (defaults to PDF).
-	
+
 	Requires Microsoft Word 2007 or later.
 	"""
+
 	def __init__(self):
 		from win32com.client import Dispatch
 		import pythoncom
@@ -50,6 +53,7 @@ class Converter(object):
 	def __del__(self):
 		self.word.Quit()
 
+
 form = """
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -67,11 +71,12 @@ form = """
 </body>
 </html>"""
 
+
 class ConvertServer(object):
 	def index(self):
 		return form
 	index.exposed = True
- 
+
 	def convert(self, document):
 		cherrypy.response.headers['Content-Type'] = 'application/pdf'
 		return Converter().convert(document.file.read())
@@ -83,5 +88,6 @@ class ConvertServer(object):
 		import cherrypy
 		_, args = optparse.OptionParser().parse_args()
 		config = None
-		if args: config, = args
+		if args:
+			config, = args
 		cherrypy.quickstart(ConvertServer(), config=config)

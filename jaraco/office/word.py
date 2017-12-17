@@ -11,8 +11,10 @@ from jaraco.util.filesystem import ExtensionReplacer
 
 log = logging.getLogger(__name__)
 
+
 def save_to(content, filename):
 	open(filename, 'wb').write(content)
+
 
 def handle_multiple(docfile, pdffile=None):
 	"""
@@ -27,13 +29,15 @@ def handle_multiple(docfile, pdffile=None):
 	converter = Converter()
 	doc_content = itertools.imap(lambda f: open(f, 'rb').read(), doc_files)
 	pdf_content = itertools.imap(converter, doc_content)
-	pdf_files = itertools.imap(ExtensionReplacer('.pdf'), doc_files) if not pdffile else [pdffile]
+	pdf_files = itertools.imap(ExtensionReplacer(
+		'.pdf'), doc_files) if not pdffile else [pdffile]
 	map(save_to, pdf_content, pdf_files)
+
 
 def doc_to_pdf_cmd():
 	"""
 	%prog <word doc> [<pdf file>]
-	
+
 	Convert a word document to a PDF using Office 2007
 	"""
 	usage = inspect.getdoc(doc_to_pdf_cmd)
