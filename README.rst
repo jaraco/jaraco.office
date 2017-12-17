@@ -1,21 +1,15 @@
-jaraco.office
-=============
+.. image:: https://img.shields.io/pypi/v/jaraco.office.svg
+   :target: https://pypi.org/project/jaraco.office
 
-.. contents::
+.. image:: https://img.shields.io/pypi/pyversions/jaraco.office.svg
 
-Status and License
-------------------
+.. image:: https://img.shields.io/travis/jaraco/jaraco.office/master.svg
+   :target: http://travis-ci.org/jaraco/jaraco.office
+
+.. image:: https://readthedocs.org/projects/jaracooffice/badge/?version=latest
+   :target: http://jaracooffice.readthedocs.io/en/latest/?badge=latest
 
 ``jaraco.office`` provides facilities for working with Microsoft Offic
 applications (Word, Excel, etc) using the Win32 APIs. For cross-platform
 libraries that work directly with Office 2007 OpenOffice formats, see
-`ParadocX <http://bitbucket.org/yougov/paradocx>`_ and related packages.
-
-``jaraco.office`` is written by Jason R. Coombs.  It is licensed under an
-`MIT-style permissive license
-<http://www.opensource.org/licenses/mit-license.php>`_.
-
-You can install it with ``easy_install jaraco.office``, or from the
-`mercurial repository
-<http://bitbucket.org/jaraco/jaraco.office/get/tip.zip#egg=jaraco.office-dev>`_ with
-``easy_install jaraco.office==dev``.
+`ParadocX <https://github.com/yougov/paradocx>`_ and related packages.
