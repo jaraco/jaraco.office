@@ -1,7 +1,7 @@
 import os
 import argparse
 from contextlib import contextmanager
-from jaraco.util.filesystem import save_to_file, replace_extension
+from jaraco.path import save_to_file, replace_extension
 
 
 @contextmanager
