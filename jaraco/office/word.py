@@ -7,7 +7,7 @@ from glob import glob
 from optparse import OptionParser
 
 from jaraco.office.convert import Converter
-from jaraco.util.filesystem import ExtensionReplacer
+from jaraco.path import ExtensionReplacer
 
 log = logging.getLogger(__name__)
 

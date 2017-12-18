@@ -34,7 +34,7 @@ params = dict(
 	),
 	python_requires='>=2.7',
 	install_requires=[
-		'jaraco.util>=4.0dev',
+		'jaraco.path',
 	],
 	extras_require={
 		'testing': [
