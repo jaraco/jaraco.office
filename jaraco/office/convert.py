@@ -1,5 +1,5 @@
 import os
-import optparse
+import argparse
 from contextlib import contextmanager
 from jaraco.util.filesystem import save_to_file, replace_extension
 
@@ -86,8 +86,7 @@ class ConvertServer(object):
 	def start_server():
 		global cherrypy
 		import cherrypy
-		_, args = optparse.OptionParser().parse_args()
-		config = None
-		if args:
-			config, = args
-		cherrypy.quickstart(ConvertServer(), config=config)
+		parser = argparse.ArgumentParser()
+		parser.add_argument('config')
+		args = parser.parse_args()
+		cherrypy.quickstart(ConvertServer(), config=args.config)
