@@ -3,7 +3,11 @@ from __future__ import print_function
 from win32com.client import Dispatch
 import re
 
-app = Dispatch('Excel.Application')
+try:
+	app = Dispatch('Excel.Application')
+except Exception:
+	app = None
+	
 # wb = app.Workbooks.Open(filename)
 
 default_pattern = 'Total'
