@@ -1,6 +1,6 @@
 import contextlib
 
-from jaraco.util.filesystem import tempfile_context
+from jaraco.path import tempfile_context
 
 
 def sheet_as_dict(worksheet):
