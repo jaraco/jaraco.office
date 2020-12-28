@@ -14,8 +14,8 @@
    :target: https://github.com/psf/black
    :alt: Code style: Black
 
-.. image:: https://readthedocs.org/projects/jaracooffice/badge/?version=latest
-   :target: http://jaracooffice.readthedocs.io/en/latest/?badge=latest
+.. .. image:: https://readthedocs.org/projects/skeleton/badge/?version=latest
+..    :target: http://skeleton.readthedocs.io/en/latest/?badge=latest
 
 ``jaraco.office`` provides facilities for working with Microsoft Offic
 applications (Word, Excel, etc) using the Win32 APIs. For cross-platform
