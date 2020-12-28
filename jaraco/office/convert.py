@@ -44,7 +44,7 @@ class Converter(object):
             pdffile = replace_extension('.pdf', docfile)
             dont_save = getattr(constants, 'wdDoNotSaveChanges', 0)
             with word_context(self.word, docfile, dont_save) as doc:
-                res = doc.SaveAs(pdffile, target_format)
+                doc.SaveAs(pdffile, target_format)
             with open(pdffile, 'rb') as pdf:
                 content = pdf.read()
             os.remove(pdffile)
@@ -57,21 +57,22 @@ class Converter(object):
 
 
 form = """
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" \
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:py="http://genshi.edgewall.org/"
-	xmlns:xi="http://www.w3.org/2001/XInclude">
+    xmlns:py="http://genshi.edgewall.org/"
+    xmlns:xi="http://www.w3.org/2001/XInclude">
 <head>
 </head>
 <body>
-	<div>
-		<form method="post" action="convert" enctype="multipart/form-data">
-			<input type="file" name="document"/>
-			<input type="submit" />
-		</form>
-	</div>
+    <div>
+        <form method="post" action="convert" enctype="multipart/form-data">
+            <input type="file" name="document"/>
+            <input type="submit" />
+        </form>
+    </div>
 </body>
-</html>"""
+</html>""".replace('    ', '\t')
 
 
 class ConvertServer(object):

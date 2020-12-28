@@ -18,7 +18,7 @@ def CleanRow(row):
 
 
 def HasPattern(row, pattern=default_pattern):
-    strings = map(unicode, CleanRow(row))
+    strings = map(str, CleanRow(row))
     pattern = re.compile(pattern, re.I)
     return bool(filter(pattern.search, strings))
 
