@@ -1,7 +1,7 @@
-from __future__ import print_function
+import re
 
 from win32com.client import Dispatch
-import re
+
 
 try:
     app = Dispatch('Excel.Application')

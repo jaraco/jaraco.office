@@ -1,6 +1,7 @@
 import os
 import argparse
 from contextlib import contextmanager
+
 from jaraco.path import save_to_file, replace_extension
 
 
@@ -13,7 +14,7 @@ def word_context(word, filename, close_flags):
         doc.Close(close_flags)
 
 
-class Converter(object):
+class Converter:
     """
     An object that will convert a Word-readable file to one of the Word-
     savable formats (defaults to PDF).
@@ -77,7 +78,7 @@ form = """
 )
 
 
-class ConvertServer(object):
+class ConvertServer:
     def index(self):
         return form
 

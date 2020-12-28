@@ -1,13 +1,13 @@
-#!python
-
 import inspect
 import logging
 import itertools
 from glob import glob
 from optparse import OptionParser
 
-from jaraco.office.convert import Converter
 from jaraco.path import ExtensionReplacer
+
+from .convert import Converter
+
 
 log = logging.getLogger(__name__)
 
