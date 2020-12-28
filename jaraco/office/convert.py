@@ -81,13 +81,13 @@ class ConvertServer(object):
     def index(self):
         return form
 
-    index.exposed = True
+    index.exposed = True  # type: ignore
 
     def convert(self, document):
         cherrypy.response.headers['Content-Type'] = 'application/pdf'
         return Converter().convert(document.file.read())
 
-    convert.exposed = True
+    convert.exposed = True  # type: ignore
 
     @staticmethod
     def start_server():
