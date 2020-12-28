@@ -6,52 +6,54 @@ from jaraco.path import save_to_file, replace_extension
 
 @contextmanager
 def word_context(word, filename, close_flags):
-	doc = word.Documents.Open(filename)
-	try:
-		yield doc
-	finally:
-		doc.Close(close_flags)
+    doc = word.Documents.Open(filename)
+    try:
+        yield doc
+    finally:
+        doc.Close(close_flags)
 
 
 class Converter(object):
-	"""
-	An object that will convert a Word-readable file to one of the Word-
-	savable formats (defaults to PDF).
+    """
+    An object that will convert a Word-readable file to one of the Word-
+    savable formats (defaults to PDF).
 
-	Requires Microsoft Word 2007 or later.
-	"""
+    Requires Microsoft Word 2007 or later.
+    """
 
-	def __init__(self):
-		from win32com.client import Dispatch
-		import pythoncom
-		import threading
-		if threading.current_thread().getName() != 'MainThread':
-			pythoncom.CoInitialize()
-		self.word = Dispatch('Word.Application')
+    def __init__(self):
+        from win32com.client import Dispatch
+        import pythoncom
+        import threading
 
-	def convert(self, docfile_string, target_format=None):
-		"""
-		Take a string (in memory) and return it as a string of the
-		target format (also as a string in memory).
-		"""
-		from win32com.client import constants
-		target_format = target_format or getattr(constants, 'wdFormatPDF', 17)
+        if threading.current_thread().getName() != 'MainThread':
+            pythoncom.CoInitialize()
+        self.word = Dispatch('Word.Application')
 
-		with save_to_file(docfile_string) as docfile:
-			# if I don't put a pdf extension on it, Word will
-			pdffile = replace_extension('.pdf', docfile)
-			dont_save = getattr(constants, 'wdDoNotSaveChanges', 0)
-			with word_context(self.word, docfile, dont_save) as doc:
-				res = doc.SaveAs(pdffile, target_format)
-			with open(pdffile, 'rb') as pdf:
-				content = pdf.read()
-			os.remove(pdffile)
-		return content
+    def convert(self, docfile_string, target_format=None):
+        """
+        Take a string (in memory) and return it as a string of the
+        target format (also as a string in memory).
+        """
+        from win32com.client import constants
 
-	__call__ = convert
+        target_format = target_format or getattr(constants, 'wdFormatPDF', 17)
 
-	def __del__(self):
-		self.word.Quit()
+        with save_to_file(docfile_string) as docfile:
+            # if I don't put a pdf extension on it, Word will
+            pdffile = replace_extension('.pdf', docfile)
+            dont_save = getattr(constants, 'wdDoNotSaveChanges', 0)
+            with word_context(self.word, docfile, dont_save) as doc:
+                res = doc.SaveAs(pdffile, target_format)
+            with open(pdffile, 'rb') as pdf:
+                content = pdf.read()
+            os.remove(pdffile)
+        return content
+
+    __call__ = convert
+
+    def __del__(self):
+        self.word.Quit()
 
 
 form = """
@@ -73,20 +75,23 @@ form = """
 
 
 class ConvertServer(object):
-	def index(self):
-		return form
-	index.exposed = True
+    def index(self):
+        return form
 
-	def convert(self, document):
-		cherrypy.response.headers['Content-Type'] = 'application/pdf'
-		return Converter().convert(document.file.read())
-	convert.exposed = True
+    index.exposed = True
 
-	@staticmethod
-	def start_server():
-		global cherrypy
-		import cherrypy
-		parser = argparse.ArgumentParser()
-		parser.add_argument('config')
-		args = parser.parse_args()
-		cherrypy.quickstart(ConvertServer(), config=args.config)
+    def convert(self, document):
+        cherrypy.response.headers['Content-Type'] = 'application/pdf'
+        return Converter().convert(document.file.read())
+
+    convert.exposed = True
+
+    @staticmethod
+    def start_server():
+        global cherrypy
+        import cherrypy
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument('config')
+        args = parser.parse_args()
+        cherrypy.quickstart(ConvertServer(), config=args.config)
