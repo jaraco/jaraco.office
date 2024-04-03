@@ -11,7 +11,7 @@ Welcome to |project| documentation!
    history
 
 
-.. automodule:: PROJECT
+.. automodule:: jaraco.office
     :members:
     :undoc-members:
     :show-inheritance:
