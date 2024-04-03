@@ -73,9 +73,7 @@ form = """
         </form>
     </div>
 </body>
-</html>""".replace(
-    '    ', '\t'
-)
+</html>""".replace('    ', '\t')
 
 
 class ConvertServer:
