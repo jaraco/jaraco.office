@@ -72,4 +72,9 @@ type = [
 doc-to-pdf = "jaraco.office.word:doc_to_pdf_cmd"
 doc-to-pdf-server = "jaraco.office.convert:ConvertServer.start_server"
 
+
 [tool.setuptools_scm]
+
+
+[tool.pytest-enabler.mypy]
+# Disabled due to jaraco/skeleton#143
