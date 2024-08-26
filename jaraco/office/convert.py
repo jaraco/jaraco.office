@@ -1,8 +1,12 @@
-import os
 import argparse
+import os
+import threading
 from contextlib import contextmanager
 
-from jaraco.path import save_to_file, replace_extension
+import pythoncom
+from win32com.client import Dispatch, constants
+
+from jaraco.path import replace_extension, save_to_file
 
 
 @contextmanager
@@ -23,10 +27,6 @@ class Converter:
     """
 
     def __init__(self):
-        from win32com.client import Dispatch
-        import pythoncom
-        import threading
-
         if threading.current_thread().getName() != 'MainThread':
             pythoncom.CoInitialize()
         self.word = Dispatch('Word.Application')
@@ -36,8 +36,6 @@ class Converter:
         Take a string (in memory) and return it as a string of the
         target format (also as a string in memory).
         """
-        from win32com.client import constants
-
         target_format = target_format or getattr(constants, 'wdFormatPDF', 17)
 
         with save_to_file(docfile_string) as docfile:
@@ -80,17 +78,18 @@ class ConvertServer:
     def index(self):
         return form
 
-    index.exposed = True  # type: ignore
+    index.exposed = True  # type: ignore[attr-defined]
 
     def convert(self, document):
+        import cherrypy
+
         cherrypy.response.headers['Content-Type'] = 'application/pdf'
         return Converter().convert(document.file.read())
 
-    convert.exposed = True  # type: ignore
+    convert.exposed = True  # type: ignore[attr-defined]
 
     @staticmethod
     def start_server():
-        global cherrypy
         import cherrypy
 
         parser = argparse.ArgumentParser()
