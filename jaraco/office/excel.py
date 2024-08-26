@@ -1,5 +1,7 @@
 import contextlib
 
+from win32com.client import Dispatch
+
 from jaraco.path import tempfile_context
 
 
@@ -22,8 +24,6 @@ xlXMLSpreadsheet = 46
 
 
 def open_workbook(filename):
-    from win32com.client import Dispatch
-
     app = Dispatch('Excel.Application')
     return app.Workbooks.Open(filename)
 
