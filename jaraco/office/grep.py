@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 import re
 
-from win32com.client import Dispatch
-
+from win32com.client import Dispatch, dynamic
 
 try:
-    app = Dispatch('Excel.Application')
+    app: dynamic.CDispatch | None = Dispatch('Excel.Application')
 except Exception:
     app = None
 
