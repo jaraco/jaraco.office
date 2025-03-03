@@ -34,24 +34,16 @@ jobs:
     strategy:
       # https://blog.jaraco.com/efficient-use-of-ci-resources/
       matrix:
+        # This library is Windows-only
+        # pywin32 does not yet support pypy: mhammond/pywin32#1289 & pypy/pypy#3836
         python:
-        - "3.9"
-        - "3.13"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
         platform:
-        - ubuntu-latest
-        - macos-latest
-        - windows-latest
-        include:
-        - python: "3.10"
-          platform: ubuntu-latest
-        - python: "3.11"
-          platform: ubuntu-latest
-        - python: "3.12"
-          platform: ubuntu-latest
-        - python: "3.14"
-          platform: ubuntu-latest
-        - python: pypy3.10
-          platform: ubuntu-latest
+          - windows-latest
     runs-on: ${{ matrix.platform }}
     continue-on-error: ${{ matrix.python == '3.14' }}
     steps:
@@ -80,7 +72,7 @@ jobs:
         job:
         - diffcov
         - docs
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
         with:

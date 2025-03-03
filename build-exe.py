@@ -2,21 +2,10 @@
 Build script to create a doc-to-pdf convert server as a Windows executable.
 """
 
-import os
-import textwrap
-
-
-setup_params = dict(
-    console=['server.py'],
-    options=dict(
-        py2exe=dict(
-            packages=['pkg_resources'],
-        ),
-    ),
-    script_args=('py2exe',),
-)
-
 if __name__ == '__main__':
+    import os
+    import textwrap
+
     from setuptools import setup
 
     __import__('py2exe')
@@ -25,5 +14,13 @@ if __name__ == '__main__':
         convert.ConvertServer.start_server()
         """
     open('server.py', 'w').write(textwrap.dedent(code))
-    setup(**setup_params)
+    setup(
+        console=['server.py'],
+        options=dict(
+            py2exe=dict(
+                packages=['pkg_resources'],
+            ),
+        ),
+        script_args=('py2exe',),  # type: ignore[arg-type] # python/typeshed#12595
+    )
     os.remove('server.py')

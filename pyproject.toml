@@ -20,6 +20,7 @@ classifiers = [
 requires-python = ">=3.9"
 dependencies = [
 	"jaraco.path",
+	'pywin32; platform_system == "Windows"',
 ]
 dynamic = ["version"]
 keywords = ["excel office word"]
@@ -33,7 +34,7 @@ test = [
 	"pytest >= 6, != 8.1.*",
 
 	# local
-	'pypiwin32; platform_system == "Windows"',
+	"cherrypy", # Optional dependency for ConvertServer
 ]
 
 doc = [
@@ -65,6 +66,8 @@ type = [
 	"pytest-mypy",
 
 	# local
+	"types-pywin32",
+	"types-setuptools",
 ]
 
 
@@ -74,7 +77,3 @@ doc-to-pdf-server = "jaraco.office.convert:ConvertServer.start_server"
 
 
 [tool.setuptools_scm]
-
-
-[tool.pytest-enabler.mypy]
-# Disabled due to jaraco/skeleton#143
