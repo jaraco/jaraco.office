@@ -1,6 +1,5 @@
 import inspect
 import logging
-import itertools
 from glob import glob
 from optparse import OptionParser
 
@@ -16,6 +15,11 @@ def save_to(content, filename):
     open(filename, 'wb').write(content)
 
 
+def read_bytes(filename):
+    with open(filename, 'rb') as file:
+        return file.read()
+
+
 def handle_multiple(docfile, pdffile=None):
     """
     Handle docfile if it matches more than one file.
@@ -27,14 +31,11 @@ def handle_multiple(docfile, pdffile=None):
             raise Exception("Cannot specify output file with multiple sources")
     log.info("Processing {n_files} source files...".format(**vars()))
     converter = Converter()
-    doc_content = itertools.imap(lambda f: open(f, 'rb').read(), doc_files)
-    pdf_content = itertools.imap(converter, doc_content)
-    pdf_files = (
-        itertools.imap(ExtensionReplacer('.pdf'), doc_files)
-        if not pdffile
-        else [pdffile]
-    )
-    map(save_to, pdf_content, pdf_files)
+    doc_content = map(read_bytes, doc_files)
+    pdf_content = map(converter, doc_content)
+    pdf_files = map(ExtensionReplacer('.pdf'), doc_files) if not pdffile else [pdffile]
+    for content, filename in zip(pdf_content, pdf_files):
+        save_to(content, filename)
 
 
 def doc_to_pdf_cmd():

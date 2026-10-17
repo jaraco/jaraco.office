@@ -1,0 +1,1 @@
+Fixed doc-to-pdf so it converts and saves files on Python 3 (previously relied on Python 2's itertools.imap and an eager map).
