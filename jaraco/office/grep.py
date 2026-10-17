@@ -2,10 +2,9 @@ import re
 
 from win32com.client import Dispatch
 
-
 try:
     app = Dispatch('Excel.Application')
-except Exception:
+except Exception:  # noqa: BLE001 # Excel may be unavailable for many reasons
     app = None
 
 # wb = app.Workbooks.Open(filename)
@@ -19,7 +18,7 @@ def CleanRow(row):
 
 def HasPattern(row, pattern=default_pattern):
     strings = map(str, CleanRow(row))
-    pattern = re.compile(pattern, re.I)
+    pattern = re.compile(pattern, re.IGNORECASE)
     return bool(filter(pattern.search, strings))
 
 

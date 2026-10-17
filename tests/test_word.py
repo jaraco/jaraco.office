@@ -23,7 +23,7 @@ def test_handle_single_with_target(tmp_path, monkeypatch):
 def test_target_with_multiple_sources(tmp_path):
     for name in 'a', 'b':
         tmp_path.joinpath(f'{name}.doc').write_bytes(b'')
-    with pytest.raises(Exception, match='Cannot specify output file'):
+    with pytest.raises(ValueError, match='Cannot specify output file'):
         word.handle_multiple(str(tmp_path / '*.doc'), 'out.pdf')
 
 

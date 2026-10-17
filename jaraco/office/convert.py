@@ -1,8 +1,8 @@
-import os
 import argparse
+import os
 from contextlib import contextmanager
 
-from jaraco.path import save_to_file, replace_extension
+from jaraco.path import replace_extension, save_to_file
 
 
 @contextmanager
@@ -23,9 +23,10 @@ class Converter:
     """
 
     def __init__(self):
-        from win32com.client import Dispatch
-        import pythoncom
         import threading
+
+        import pythoncom
+        from win32com.client import Dispatch
 
         if threading.current_thread().getName() != 'MainThread':
             pythoncom.CoInitialize()
