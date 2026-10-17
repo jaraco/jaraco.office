@@ -16,7 +16,7 @@ setup_params = dict(
     script_args=('py2exe',),
 )
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     from setuptools import setup
 
     __import__('py2exe')

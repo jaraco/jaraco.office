@@ -25,3 +25,12 @@ def test_target_with_multiple_sources(tmp_path):
         tmp_path.joinpath(f'{name}.doc').write_bytes(b'')
     with pytest.raises(Exception, match='Cannot specify output file'):
         word.handle_multiple(str(tmp_path / '*.doc'), 'out.pdf')
+
+
+def test_doc_to_pdf_cmd(tmp_path, monkeypatch):
+    monkeypatch.setattr(word, 'Converter', lambda: bytes.upper)
+    source = tmp_path / 'a.doc'
+    source.write_bytes(b'a')
+    monkeypatch.setattr('sys.argv', ['doc-to-pdf', str(source)])
+    word.doc_to_pdf_cmd()
+    assert tmp_path.joinpath('a.pdf').read_bytes() == b'A'
