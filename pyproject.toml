@@ -38,7 +38,8 @@ test = [
 	"pytest >= 6, != 8.1.*",
 
 	# local
-	'pypiwin32; platform_system == "Windows"',
+	# pywin32 publishes no free-threaded wheels, so it can't install on 3.14t
+	'pywin32; platform_system == "Windows" and python_version < "3.14"',
 ]
 
 doc = [
